@@ -39,7 +39,10 @@ def sleeper():
         # Each child owns a session/process group. Keep the leader unreaped
         # until its group is signalled, so the group id cannot be recycled.
         if proc.returncode is None:
-            os.killpg(proc.pid, signal.SIGKILL)
+            if hasattr(os, "killpg"):
+                os.killpg(proc.pid, signal.SIGKILL)
+            else:
+                proc.kill()
         proc.wait(timeout=5)
 
 

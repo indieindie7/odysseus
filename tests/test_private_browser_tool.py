@@ -199,7 +199,11 @@ def test_cli_group_is_not_signalled_once_its_identity_is_lost(monkeypatch, verdi
     assert calls == ["fallback-kill"]
 
 
+<<<<<<< ours
 @pytest.mark.skipif(os.name == "nt", reason="POSIX-only: os.getpgid/os.killpg")
+=======
+@pytest.mark.skipif(os.name == "nt", reason="POSIX-only: os.getpgid")
+>>>>>>> theirs
 def test_cli_without_a_spawn_identity_is_never_group_signalled(monkeypatch) -> None:
     calls = []
     monkeypatch.setattr(web_tools.os, "getpgid", lambda pid: pid)
@@ -210,7 +214,11 @@ def test_cli_without_a_spawn_identity_is_never_group_signalled(monkeypatch) -> N
     assert calls == ["fallback-kill"]
 
 
+<<<<<<< ours
 @pytest.mark.skipif(os.name == "nt", reason="POSIX-only: os.getpgid/os.killpg")
+=======
+@pytest.mark.skipif(os.name == "nt", reason="POSIX-only: os.getpgid")
+>>>>>>> theirs
 def test_cli_group_that_moved_is_not_signalled(monkeypatch) -> None:
     """The identity verifies but no longer leads the recorded group."""
     from src import process_lifecycle, process_ownership
@@ -604,6 +612,7 @@ def _legacy_pid_file_for(tmp_path, monkeypatch, namespace, session, pid):
     return target
 
 
+@pytest.mark.skipif(os.name == "nt", reason="POSIX-only: signal.SIGKILL")
 def test_legacy_daemon_pid_file_kills_only_the_verified_daemon(monkeypatch, tmp_path) -> None:
     proc = _fake_procfs(monkeypatch, tmp_path)
     _fake_process(proc, 4401, "node agent-browser --serve")
@@ -615,6 +624,7 @@ def test_legacy_daemon_pid_file_kills_only_the_verified_daemon(monkeypatch, tmp_
     assert killed == [4401] and not pid_file.exists()
 
 
+@pytest.mark.skipif(os.name == "nt", reason="POSIX-only: signal.SIGKILL")
 def test_legacy_daemon_pid_reused_before_the_signal_is_spared(monkeypatch, tmp_path) -> None:
     """The pid file still names the slot; the daemon in it was replaced."""
     from src import process_lifecycle
@@ -639,6 +649,7 @@ def test_legacy_daemon_pid_reused_before_the_signal_is_spared(monkeypatch, tmp_p
     assert killed == [] and (proc / "4402").exists()
 
 
+@pytest.mark.skipif(os.name == "nt", reason="POSIX-only: signal.SIGKILL")
 def test_legacy_daemon_without_identity_keeps_its_pid_file(monkeypatch, tmp_path) -> None:
     proc = _fake_procfs(monkeypatch, tmp_path)
     _fake_process(proc, 4403, "node agent-browser --serve")

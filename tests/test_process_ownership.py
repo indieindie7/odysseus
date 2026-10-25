@@ -47,6 +47,7 @@ def sleeper():
 
 
 # ── Verdicts, against real processes ────────────────────────────────────────
+@pytest.mark.skipif(os.name == "nt", reason="POSIX-only: os.killpg")
 def test_a_live_process_with_its_own_token_is_owned(sleeper):
     proc = sleeper()
     token = po.start_token(proc.pid)
@@ -55,6 +56,7 @@ def test_a_live_process_with_its_own_token_is_owned(sleeper):
     assert po.verify(proc.pid, token) == po.OWNED
 
 
+@pytest.mark.skipif(os.name == "nt", reason="POSIX-only: os.killpg")
 def test_the_same_pid_with_a_different_token_is_foreign(sleeper):
     """The whole point: a pid is a slot, and the token says who is in it."""
     proc = sleeper()
@@ -77,6 +79,7 @@ def test_a_pid_that_was_never_issued_is_gone():
     assert po.verify(2 ** 30, "token:anything") == po.GONE
 
 
+@pytest.mark.skipif(os.name == "nt", reason="POSIX-only: os.killpg")
 def test_a_missing_token_is_unverifiable_and_never_owned(sleeper):
     """A record that captured no identity cannot acquire one afterwards.
 
@@ -101,6 +104,7 @@ def test_a_falsy_pid_is_gone_rather_than_unverifiable():
     assert po.verify(0, "token:x") == po.GONE
 
 
+@pytest.mark.skipif(os.name == "nt", reason="POSIX-only: os.killpg")
 def test_capture_always_returns_both_fields(sleeper):
     proc = sleeper()
     captured = po.capture(proc.pid)
@@ -115,6 +119,7 @@ def test_this_process_verifies_as_itself():
 
 
 # ── An unavailable mechanism is a failure, not a default ────────────────────
+@pytest.mark.skipif(os.name == "nt", reason="POSIX-only: os.killpg")
 def test_no_inspection_mechanism_yields_unverifiable(monkeypatch, sleeper):
     proc = sleeper()
     token = po.start_token(proc.pid)
@@ -133,6 +138,7 @@ def test_no_mechanism_makes_start_token_raise_rather_than_return_none(monkeypatc
         po.start_token(os.getpid())
 
 
+@pytest.mark.skipif(os.name == "nt", reason="POSIX-only: os.killpg")
 def test_a_probe_that_raises_is_unverifiable_not_owned(monkeypatch, sleeper):
     proc = sleeper()
 
@@ -235,6 +241,7 @@ def test_the_procfs_token_reads_a_comm_containing_spaces_and_parens(monkeypatch,
 
 
 # ── The process tree ────────────────────────────────────────────────────────
+@pytest.mark.skipif(os.name == "nt", reason="POSIX-only: os.killpg")
 def test_descendants_walks_a_real_tree(sleeper):
     """The grandchild case: a shell that backgrounds work and the work itself."""
     proc = sleeper(("bash", "-c", "sleep 30 & sleep 30"))
@@ -250,6 +257,7 @@ def test_descendants_walks_a_real_tree(sleeper):
     assert len(found) >= 3, f"expected the shell and its two children, got {found}"
 
 
+@pytest.mark.skipif(os.name == "nt", reason="POSIX-only: os.killpg")
 def test_descendants_includes_the_root_even_with_no_children(sleeper):
     proc = sleeper()
 

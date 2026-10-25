@@ -360,6 +360,7 @@ async def test_cancellation_unwinds_bound_journal_without_done_or_claims():
     assert current_journal() is None
 
 
+@pytest.mark.skipif(os.name == "nt", reason="enforcing containment (bubblewrap/process group) is POSIX-only; Windows has no filesystem/process_tree mechanism")
 @pytest.mark.asyncio
 async def test_real_unittest_dispatch_and_policy_denial_have_distinct_receipts(tmp_path, monkeypatch):
     from src.tool_execution import execute_tool_block, NO_TOOL_SECURITY_CONTEXT
@@ -381,6 +382,7 @@ async def test_real_unittest_dispatch_and_policy_denial_have_distinct_receipts(t
     assert EvidenceLedger.from_tool_events(journal.evidence_events()).evaluate().status.value == 'verified'
 
 
+@pytest.mark.skipif(os.name == "nt", reason="enforcing containment (bubblewrap/process group) is POSIX-only; Windows has no filesystem/process_tree mechanism")
 @pytest.mark.asyncio
 async def test_shell_writing_same_basename_elsewhere_is_not_required_mutation(tmp_path, monkeypatch):
     from src.tool_execution import execute_tool_block, NO_TOOL_SECURITY_CONTEXT

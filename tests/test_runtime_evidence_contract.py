@@ -79,6 +79,7 @@ def test_artifact_observation_does_not_open_sensitive_or_outside_files(tmp_path,
     assert artifact_version('../outside', str(tmp_path)) == 'unobserved'
 
 
+@pytest.mark.skipif(os.name == "nt", reason="POSIX-only: os.mkfifo")
 def test_fifo_artifact_observation_is_nonblocking(tmp_path):
     os.mkfifo(tmp_path / 'pipe')
     assert artifact_version('pipe', str(tmp_path)) == 'unobserved'

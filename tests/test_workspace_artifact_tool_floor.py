@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import pytest
+from tests.helpers.symlinks import requires_symlinks
 
 
 @pytest.fixture(autouse=True)
@@ -2270,6 +2271,7 @@ def test_workspace_namespace_mounts_only_a_nested_python_environment(monkeypatch
     ]
 
 
+@requires_symlinks
 def test_workspace_namespace_rejects_broad_or_symlinked_python_prefixes(monkeypatch, tmp_path):
     import shlex
 

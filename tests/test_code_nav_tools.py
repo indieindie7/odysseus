@@ -5,7 +5,7 @@ import asyncio
 import tempfile
 import pytest
 
-os.environ.setdefault("DATABASE_URL", "sqlite:////tmp/test_code_nav.db")
+os.environ.setdefault("DATABASE_URL", "sqlite:///:memory:")
 
 from src.tool_execution import _direct_fallback
 
@@ -15,12 +15,19 @@ def _run(tool, content):
 
 
 @pytest.fixture
-def repo():
-    # Built under /tmp, which is on the default tool-path allowlist.
+def repo(monkeypatch):
+    # Built under /tmp, which is on the default tool-path allowlist. Windows
+    # has no /tmp: build under the system temp dir instead and put it on the
+    # allowlist through $TMPDIR, which _tool_path_roots also honours.
     # realpath because the code under test resolves the path it reports, and on
     # macOS /tmp is a symlink to /private/tmp: comparing the unresolved path
     # against the resolved one fails on a file both sides found correctly.
-    root = os.path.realpath(tempfile.mkdtemp(dir="/tmp", prefix="codenav_"))
+    if os.path.isdir("/tmp"):
+        tmp_root = "/tmp"
+    else:
+        tmp_root = tempfile.gettempdir()
+        monkeypatch.setenv("TMPDIR", tmp_root)
+    root = os.path.realpath(tempfile.mkdtemp(dir=tmp_root, prefix="codenav_"))
     try:
         with open(os.path.join(root, "a.py"), "w") as f:
             f.write("import os\n# needle here\nprint('x')\n")

@@ -290,6 +290,7 @@ async def test_generate_pty_disconnect_kills_the_whole_session(tmp_path):
         _reap_if_alive(child_pid)
 
 
+@pytest.mark.skipif(os.name == "nt", reason="POSIX process groups")
 async def test_terminate_pty_session_reports_a_session_it_could_not_kill(
     monkeypatch,
 ):
@@ -304,6 +305,7 @@ async def test_terminate_pty_session_reports_a_session_it_could_not_kill(
     assert await shell_routes._terminate_pty_session(proc) is False
 
 
+@pytest.mark.skipif(os.name == "nt", reason="POSIX process groups")
 async def test_terminate_pty_session_escalates_before_giving_up(monkeypatch):
     """SIGTERM then SIGKILL — the group is never signalled only once."""
     import routes.shell_routes as shell_routes
@@ -413,6 +415,7 @@ async def test_terminate_pty_session_never_signals_a_reused_leader_pid(monkeypat
     assert signalled == [], f"teardown signalled the replacement: {signalled}"
 
 
+@pytest.mark.skipif(os.name == "nt", reason="POSIX process groups")
 def test_session_alive_treats_a_refused_probe_as_alive(monkeypatch):
     """EPERM says the group exists but we may not signal it, not that it died.
 
@@ -435,6 +438,7 @@ def test_session_alive_treats_a_refused_probe_as_alive(monkeypatch):
     assert shell_routes._session_alive(4242, 4242) is False
 
 
+@pytest.mark.skipif(os.name == "nt", reason="POSIX process groups")
 async def test_terminate_pty_session_reports_a_group_it_may_not_signal(monkeypatch):
     """A session we cannot signal at all is reported as not contained.
 

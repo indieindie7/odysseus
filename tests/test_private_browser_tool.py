@@ -199,11 +199,7 @@ def test_cli_group_is_not_signalled_once_its_identity_is_lost(monkeypatch, verdi
     assert calls == ["fallback-kill"]
 
 
-<<<<<<< ours
 @pytest.mark.skipif(os.name == "nt", reason="POSIX-only: os.getpgid/os.killpg")
-=======
-@pytest.mark.skipif(os.name == "nt", reason="POSIX-only: os.getpgid")
->>>>>>> theirs
 def test_cli_without_a_spawn_identity_is_never_group_signalled(monkeypatch) -> None:
     calls = []
     monkeypatch.setattr(web_tools.os, "getpgid", lambda pid: pid)
@@ -214,11 +210,7 @@ def test_cli_without_a_spawn_identity_is_never_group_signalled(monkeypatch) -> N
     assert calls == ["fallback-kill"]
 
 
-<<<<<<< ours
 @pytest.mark.skipif(os.name == "nt", reason="POSIX-only: os.getpgid/os.killpg")
-=======
-@pytest.mark.skipif(os.name == "nt", reason="POSIX-only: os.getpgid")
->>>>>>> theirs
 def test_cli_group_that_moved_is_not_signalled(monkeypatch) -> None:
     """The identity verifies but no longer leads the recorded group."""
     from src import process_lifecycle, process_ownership

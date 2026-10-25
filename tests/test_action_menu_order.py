@@ -54,7 +54,7 @@ def test_callback_actions_are_sorted_by_their_labels() -> None:
         cwd=ROOT,
         check=True,
         capture_output=True,
-        text=True,
+        text=True, encoding="utf-8",
     )
     assert result.stdout == "Open|Rename|Favorite|Copy|Select|Archive|Delete|Cancel"
 

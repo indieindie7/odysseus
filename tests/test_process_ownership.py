@@ -338,6 +338,7 @@ def test_a_procfs_row_with_an_unreadable_stat_keeps_its_command_line(
     assert table[12].ppid == 0
 
 
+@pytest.mark.skipif(os.name == "nt", reason="POSIX-only: command_lines() reads the process table via ps/procfs; win32 has no reader")
 def test_command_lines_sees_this_process():
     table = po.command_lines()
 

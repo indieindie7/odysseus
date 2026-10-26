@@ -547,6 +547,7 @@ class TestRunningInContainer:
 class TestAppleSiliconDetection:
     """APFEL should only surface as available on native Apple Silicon Macs."""
 
+    @pytest.mark.skipif(os.name == "nt", reason="POSIX-only: IS_APPLE_SILICON is gated on os.name != 'nt'")
     def test_reports_true_on_macos_arm64(self, monkeypatch):
         import core.platform_compat as platform_compat
 

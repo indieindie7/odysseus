@@ -2253,6 +2253,7 @@ def test_python_loaded_code_sees_virtual_workspace_alias(monkeypatch, tmp_path):
     assert output.read_text(encoding="utf-8") == "ok"
 
 
+@pytest.mark.skipif(os.name == "nt", reason="POSIX-only: bubblewrap argv (_wrap_workspace_namespace returns None on Windows)")
 def test_workspace_namespace_mounts_only_a_nested_python_environment(monkeypatch, tmp_path):
     import shlex
 
@@ -2276,6 +2277,7 @@ def test_workspace_namespace_mounts_only_a_nested_python_environment(monkeypatch
 
 
 @requires_symlinks
+@pytest.mark.skipif(os.name == "nt", reason="POSIX-only: bubblewrap argv (_wrap_workspace_namespace returns None on Windows)")
 def test_workspace_namespace_rejects_broad_or_symlinked_python_prefixes(monkeypatch, tmp_path):
     import shlex
 
@@ -2307,6 +2309,7 @@ def test_workspace_namespace_rejects_broad_or_symlinked_python_prefixes(monkeypa
         ]
 
 
+@pytest.mark.skipif(os.name == "nt", reason="POSIX-only: bubblewrap argv (_wrap_workspace_namespace returns None on Windows)")
 def test_workspace_namespace_preserves_the_64_bit_dynamic_loader(monkeypatch):
     """The namespace's /lib64 must mirror usrmerge hosts, not /usr/lib."""
     import shlex
